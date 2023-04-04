@@ -101,7 +101,6 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "django_celery_beat",
     "captcha",
     "wagtailcaptcha",
     "wagtailmenus",
@@ -112,20 +111,8 @@ LOCAL_APPS = [
     "core.users",
     "core_settings",
     # Your stuff: custom apps go here
-    "files_storage",
     "core",
-    "location",
-    "institution",
-    "journal",
-    "thematic_areas",
-    "altmetric",
-    "collection",
     "wagtailautocomplete",
-    "journal_and_collection",
-    "issue",
-    "processing_errors",
-    "article",
-    "vocabulary",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
