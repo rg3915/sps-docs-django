@@ -8,7 +8,10 @@ from wagtail.contrib.modeladmin.options import (
 )
 from wagtail.contrib.modeladmin.views import CreateView, EditView
 
-from spstaglib.models import SPSVersion
+from spstaglib.models import (
+    SPSVersion,
+    OccurrenceNumber,
+)
 
 
 class SPSVersionCreateView(CreateView):
@@ -39,11 +42,39 @@ class SPSVersionAdmin(ModelAdmin):
     search_fields = ("version", "begin_year", "end_year", )
 
 
+class OccNumCreateView(CreateView):
+    def form_valid(self, form):
+        self.object = form.save_all(self.request.user)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class OccNumEditView(EditView):
+    def form_valid(self, form):
+        self.object = form.save_all(self.request.user)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class OccNumAdmin(ModelAdmin):
+    model = OccurrenceNumber
+    ordering = ("text", )
+    create_view_class = OccNumCreateView
+    edit_view_class = OccNumEditView
+    menu_label = _("Occurrence Number")
+    menu_icon = "folder"
+    menu_order = 100
+    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = ("text", )
+    search_fields = ("text", )
+
+
 class SPSAdminGroup(ModelAdminGroup):
     menu_label = _("SPS")
     menu_icon = "folder-open-inverse"
     menu_order = 200
-    items = (SPSVersionAdmin, )
+    items = (SPSVersionAdmin, OccNumAdmin)
 
 
 modeladmin_register(SPSAdminGroup)

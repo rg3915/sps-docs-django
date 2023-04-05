@@ -54,3 +54,31 @@ class SPSVersion(CommonControlField):
     ]
 
     base_form_class = CoreAdminModelForm
+
+
+class OccurrenceNumber(models.Model):
+    """
+    Valores para ocorrência do elemento ou atributo. Exemplos:
+
+    - Uma vez
+    - Uma ou mais vezes
+    - Zero ou uma vez
+    - Zero ou mais vezes
+    """
+    text = models.CharField(_("Text"), max_length=256, null=False, blank=False, help_text=_('Uma vez'))
+
+    def __unicode__(self):
+        return self.text
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        verbose_name = _("Occurrence number")
+        verbose_name_plural = _("Occurrence numbers")
+
+    panels = [
+        FieldPanel("text"),
+    ]
+
+    base_form_class = CoreAdminModelForm
