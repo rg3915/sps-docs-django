@@ -14,8 +14,6 @@ from wagtail.admin.panels import (
     TabbedInterface,
 )
 
-# from wagtailcodeblock.blocks import CodeBlock
-
 from core.models import CommonControlField
 from core.forms import CoreAdminModelForm
 
@@ -79,6 +77,27 @@ class OccurrenceNumber(models.Model):
 
     panels = [
         FieldPanel("text"),
+    ]
+
+    base_form_class = CoreAdminModelForm
+
+
+class Example(Orderable, ClusterableModel, CommonControlField):
+    title = RichTextField(_("Title"), null=False, blank=False)
+    description = RichTextField(_("Description"), null=True, blank=True)
+    # https://github.com/FlipperPA/wagtailcodeblock
+    xml_code_text = models.TextField(_("XML Code"), null=True, blank=True)
+    xml_code_image = models.ImageField(upload_to='xml_examples')
+
+    class Meta:
+        verbose_name = _("Example")
+        verbose_name_plural = _("Examples")
+
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("description"),
+        FieldPanel("xml_code_text"),
+        FieldPanel("xml_code_image"),
     ]
 
     base_form_class = CoreAdminModelForm
