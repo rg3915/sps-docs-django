@@ -12,6 +12,7 @@ from spstaglib.models import (
     SPSVersion,
     OccurrenceNumber,
     Example,
+    SPSElement,
 )
 
 
@@ -112,11 +113,50 @@ class ExampleAdmin(ModelAdmin):
     )
 
 
+class SPSElementCreateView(CreateView):
+    def form_valid(self, form):
+        self.object = form.save_all(self.request.user)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class SPSElementEditView(EditView):
+    def form_valid(self, form):
+        self.object = form.save_all(self.request.user)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class SPSElementAdmin(ModelAdmin):
+    model = SPSElement
+    ordering = ("name",)
+    create_view_class = SPSElementCreateView
+    edit_view_class = SPSElementEditView
+    menu_label = _("Elements")
+    menu_icon = "folder"
+    menu_order = 100
+    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = (
+        "name",
+        "description",
+    )
+    search_fields = (
+        "name",
+        "description",
+    )
+
+
 class SPSAdminGroup(ModelAdminGroup):
     menu_label = _("SPS")
     menu_icon = "folder-open-inverse"
     menu_order = 200
-    items = (SPSVersionAdmin, OccNumAdmin, ExampleAdmin)
+    items = (
+        SPSVersionAdmin,
+        OccNumAdmin,
+        ExampleAdmin,
+        SPSElementAdmin,
+    )
 
 
 modeladmin_register(SPSAdminGroup)

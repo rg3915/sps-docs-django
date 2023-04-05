@@ -90,12 +90,63 @@ class OccurrenceNumber(models.Model):
     base_form_class = CoreAdminModelForm
 
 
+class Presence(Orderable, CommonControlField):
+    parent = ParentalKey("SPSBase", on_delete=models.CASCADE, related_name="presence")
+    present_in = models.ForeignKey(
+        "SPSBase", on_delete=models.SET_NULL, null=True, blank=True, related_name="present_in",
+    )
+    occurrence_number = models.ForeignKey(
+        OccurrenceNumber, on_delete=models.SET_NULL, null=True, blank=True
+    )
+
+    def __unicode__(self):
+        return f"{self.present_in} {self.occurrence_number}"
+
+    def __str__(self):
+        return f"{self.present_in} {self.occurrence_number}"
+
+    class Meta:
+        verbose_name = _("Presence")
+        verbose_name_plural = _("Presence")
+
+    panels = [
+        FieldPanel("present_in"),
+        FieldPanel("occurrence_number"),
+    ]
+
+    base_form_class = CoreAdminModelForm
+
+
+class NoteBlock(Orderable, ClusterableModel, CommonControlField):
+    parent = ParentalKey("SPSBase", on_delete=models.CASCADE, related_name="note_block")
+    title = models.CharField(_("Title"), max_length=256, null=True, blank=True)
+    text = RichTextField(_("Notes"), null=True, blank=True)
+
+    def __unicode__(self):
+        return self.title or ""
+
+    def __str__(self):
+        return self.title or ""
+
+    class Meta:
+        verbose_name = _("Note block")
+        verbose_name_plural = _("Note blocks")
+
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("text"),
+    ]
+
+    base_form_class = CoreAdminModelForm
+
+
 class Example(Orderable, ClusterableModel, CommonControlField):
-    title = RichTextField(_("Title"), null=False, blank=False)
+    parent = ParentalKey("SPSBase", on_delete=models.CASCADE, related_name="example")
+    title = models.TextField(_("Title"), null=True, blank=True)
     description = RichTextField(_("Description"), null=True, blank=True)
     # https://github.com/FlipperPA/wagtailcodeblock
     xml_code_text = models.TextField(_("XML Code"), null=True, blank=True)
-    xml_code_image = models.ImageField(upload_to="xml_examples")
+    xml_code_image = models.ImageField(upload_to="xml_examples", null=True, blank=True)
 
     class Meta:
         verbose_name = _("Example")
@@ -119,7 +170,6 @@ class SPSBase(ClusterableModel, CommonControlField):
         SPSVersion,
         blank=True,
     )
-    # note_blocks = models.ManyToManyField(NoteBlock)
 
     def __unicode__(self):
         return f"{self.name}"
@@ -128,7 +178,40 @@ class SPSBase(ClusterableModel, CommonControlField):
         return f"{self.name}"
 
     class Meta:
-        abstract = True
+        indexes = [
+            models.Index(
+                fields=[
+                    "name",
+                ]
+            ),
+        ]
+
+    panels_main = [
+        FieldPanel("name"),
+        FieldPanel("description"),
+    ]
+    panels_presence = [
+        InlinePanel("presence", label=_("Presence"), classname="collapsed"),
+    ]
+    panels_example = [
+        InlinePanel("example", label=_("Example"), classname="collapsed"),
+    ]
+    panels_note_block = [
+        InlinePanel("note_block", label=_("Note block"), classname="collapsed"),
+    ]
+    panels_version = [
+        AutocompletePanel("sps_versions"),
+    ]
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(panels_main, heading=_("Main")),
+            ObjectList(panels_version, heading=_("SPS Versions")),
+            ObjectList(panels_presence, heading=_("Presence")),
+            ObjectList(panels_example, heading=_("Examples")),
+            ObjectList(panels_note_block, heading=_("Note blocks")),
+        ]
+    )
+    base_form_class = CoreAdminModelForm
 
 
 class SPSElement(SPSBase):
@@ -145,53 +228,6 @@ class SPSElement(SPSBase):
 
     # attributes = models.ManyToManyField(Attribute, related_name='attributes')
 
-    def __unicode__(self):
-        return f"{self.name}"
-
-    def __str__(self):
-        return f"{self.name}"
-
     class Meta:
         verbose_name = _("Element")
         verbose_name_plural = _("Elements")
-        indexes = [
-            models.Index(
-                fields=[
-                    "name",
-                ]
-            ),
-        ]
-
-    panels_main = [
-        FieldPanel("name"),
-        FieldPanel("description"),
-        # InlinePanel("presence", label=_("Presence"), classname="collapsed"),
-    ]
-
-    # panels_attribute = [
-    #     AutocompletePanel("attributes"),
-    # ]
-
-    # panels_example = [
-    #     InlinePanel("example", label=_("Example"), classname="collapsed"),
-    # ]
-
-    # panels_note_block = [
-    #     InlinePanel("note_block", label=_("Note block"), classname="collapsed"),
-    # ]
-
-    panels_version = [
-        AutocompletePanel("sps_versions"),
-    ]
-
-    edit_handler = TabbedInterface(
-        [
-            ObjectList(panels_main, heading=_("Main")),
-            ObjectList(panels_version, heading=_("SPS Versions")),
-            # ObjectList(panels_attribute, heading=_("Attributes")),
-            # ObjectList(panels_example, heading=_("Examples")),
-            # ObjectList(panels_note_block, heading=_("Note blocks")),
-        ]
-    )
-
-    base_form_class = CoreAdminModelForm
