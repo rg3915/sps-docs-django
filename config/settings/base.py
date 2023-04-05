@@ -113,6 +113,7 @@ LOCAL_APPS = [
     # Your stuff: custom apps go here
     "core",
     "wagtailautocomplete",
+    "spstaglib",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
