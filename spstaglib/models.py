@@ -18,7 +18,7 @@ from core.models import CommonControlField
 from core.forms import CoreAdminModelForm
 
 
-class SPSVersion(CommonControlField):
+class SPSVersion(ClusterableModel, CommonControlField):
     version = models.CharField(_("Version"), max_length=16, null=False, blank=False)
     begin_year = models.PositiveIntegerField(null=True, blank=True)
     begin_month = models.PositiveIntegerField(null=True, blank=True)
@@ -38,6 +38,11 @@ class SPSVersion(CommonControlField):
 
     def __str__(self):
         return f"{self.version} {self.str_begin_year}-{self.str_end_year}"
+
+    def autocomplete_label(self):
+        return str(self)
+
+    autocomplete_search_field = "version"
 
     class Meta:
         verbose_name = _("SPS Version")
@@ -102,5 +107,91 @@ class Example(Orderable, ClusterableModel, CommonControlField):
         FieldPanel("xml_code_text"),
         FieldPanel("xml_code_image"),
     ]
+
+    base_form_class = CoreAdminModelForm
+
+
+class SPSBase(ClusterableModel, CommonControlField):
+    name = models.CharField(_("Name"), max_length=256, null=False, blank=False)
+    description = RichTextField(_("Description"), null=True, blank=True)
+    # versions
+    sps_versions = models.ManyToManyField(
+        SPSVersion,
+        blank=True,
+    )
+    # note_blocks = models.ManyToManyField(NoteBlock)
+
+    def __unicode__(self):
+        return f"{self.name}"
+
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        abstract = True
+
+
+class SPSElement(SPSBase):
+    """
+    (*) Nome do elemento
+    (*+) Aparece em
+    (*+) Descrição do elemento
+    (!+) attrs
+    (!+) Título do exemplo
+    (!+) Descrição textual do exemplo
+    (!+) Exemplo XML
+    (!+) Nota
+    """
+
+    # attributes = models.ManyToManyField(Attribute, related_name='attributes')
+
+    def __unicode__(self):
+        return f"{self.name}"
+
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        verbose_name = _("Element")
+        verbose_name_plural = _("Elements")
+        indexes = [
+            models.Index(
+                fields=[
+                    "name",
+                ]
+            ),
+        ]
+
+    panels_main = [
+        FieldPanel("name"),
+        FieldPanel("description"),
+        # InlinePanel("presence", label=_("Presence"), classname="collapsed"),
+    ]
+
+    # panels_attribute = [
+    #     AutocompletePanel("attributes"),
+    # ]
+
+    # panels_example = [
+    #     InlinePanel("example", label=_("Example"), classname="collapsed"),
+    # ]
+
+    # panels_note_block = [
+    #     InlinePanel("note_block", label=_("Note block"), classname="collapsed"),
+    # ]
+
+    panels_version = [
+        AutocompletePanel("sps_versions"),
+    ]
+
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(panels_main, heading=_("Main")),
+            ObjectList(panels_version, heading=_("SPS Versions")),
+            # ObjectList(panels_attribute, heading=_("Attributes")),
+            # ObjectList(panels_example, heading=_("Examples")),
+            # ObjectList(panels_note_block, heading=_("Note blocks")),
+        ]
+    )
 
     base_form_class = CoreAdminModelForm
