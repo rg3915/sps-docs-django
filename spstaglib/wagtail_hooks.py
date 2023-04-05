@@ -29,7 +29,7 @@ class SPSVersionEditView(EditView):
 
 class SPSVersionAdmin(ModelAdmin):
     model = SPSVersion
-    ordering = ("version", )
+    ordering = ("version",)
     create_view_class = SPSVersionCreateView
     edit_view_class = SPSVersionEditView
     menu_label = _("SPS Version")
@@ -39,8 +39,18 @@ class SPSVersionAdmin(ModelAdmin):
     exclude_from_explorer = (
         False  # or True to exclude pages of this type from Wagtail's explorer view
     )
-    list_display = ("version", "begin_year", "begin_month", "end_year", "end_month", )
-    search_fields = ("version", "begin_year", "end_year", )
+    list_display = (
+        "version",
+        "begin_year",
+        "begin_month",
+        "end_year",
+        "end_month",
+    )
+    search_fields = (
+        "version",
+        "begin_year",
+        "end_year",
+    )
 
 
 class OccNumCreateView(CreateView):
@@ -57,7 +67,7 @@ class OccNumEditView(EditView):
 
 class OccNumAdmin(ModelAdmin):
     model = OccurrenceNumber
-    ordering = ("text", )
+    ordering = ("text",)
     create_view_class = OccNumCreateView
     edit_view_class = OccNumEditView
     menu_label = _("Occurrence Number")
@@ -67,8 +77,8 @@ class OccNumAdmin(ModelAdmin):
     exclude_from_explorer = (
         False  # or True to exclude pages of this type from Wagtail's explorer view
     )
-    list_display = ("text", )
-    search_fields = ("text", )
+    list_display = ("text",)
+    search_fields = ("text",)
 
 
 class ExampleCreateView(CreateView):
@@ -85,7 +95,7 @@ class ExampleEditView(EditView):
 
 class ExampleAdmin(ModelAdmin):
     model = Example
-    ordering = ("title", )
+    ordering = ("title",)
     create_view_class = ExampleCreateView
     edit_view_class = ExampleEditView
     menu_label = _("Examples")
@@ -96,7 +106,10 @@ class ExampleAdmin(ModelAdmin):
         False  # or True to exclude pages of this type from Wagtail's explorer view
     )
     list_display = ("title", "description", "xml_code_text", "xml_code_image")
-    search_fields = ("title", "description", )
+    search_fields = (
+        "title",
+        "description",
+    )
 
 
 class SPSAdminGroup(ModelAdminGroup):

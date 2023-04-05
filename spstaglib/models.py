@@ -63,7 +63,10 @@ class OccurrenceNumber(models.Model):
     - Zero ou uma vez
     - Zero ou mais vezes
     """
-    text = models.CharField(_("Text"), max_length=256, null=False, blank=False, help_text=_('Uma vez'))
+
+    text = models.CharField(
+        _("Text"), max_length=256, null=False, blank=False, help_text=_("Uma vez")
+    )
 
     def __unicode__(self):
         return self.text
@@ -87,7 +90,7 @@ class Example(Orderable, ClusterableModel, CommonControlField):
     description = RichTextField(_("Description"), null=True, blank=True)
     # https://github.com/FlipperPA/wagtailcodeblock
     xml_code_text = models.TextField(_("XML Code"), null=True, blank=True)
-    xml_code_image = models.ImageField(upload_to='xml_examples')
+    xml_code_image = models.ImageField(upload_to="xml_examples")
 
     class Meta:
         verbose_name = _("Example")
