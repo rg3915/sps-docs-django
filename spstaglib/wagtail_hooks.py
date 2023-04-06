@@ -82,37 +82,6 @@ class OccNumAdmin(ModelAdmin):
     search_fields = ("text",)
 
 
-class ExampleCreateView(CreateView):
-    def form_valid(self, form):
-        self.object = form.save_all(self.request.user)
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class ExampleEditView(EditView):
-    def form_valid(self, form):
-        self.object = form.save_all(self.request.user)
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class ExampleAdmin(ModelAdmin):
-    model = Example
-    ordering = ("title",)
-    create_view_class = ExampleCreateView
-    edit_view_class = ExampleEditView
-    menu_label = _("Examples")
-    menu_icon = "folder"
-    menu_order = 100
-    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = (
-        False  # or True to exclude pages of this type from Wagtail's explorer view
-    )
-    list_display = ("title", "description", "xml_code_text", "xml_code_image")
-    search_fields = (
-        "title",
-        "description",
-    )
-
-
 class SPSElementCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save_all(self.request.user)
@@ -154,7 +123,6 @@ class SPSAdminGroup(ModelAdminGroup):
     items = (
         SPSVersionAdmin,
         OccNumAdmin,
-        ExampleAdmin,
         SPSElementAdmin,
     )
 
