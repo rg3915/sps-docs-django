@@ -287,3 +287,65 @@ class SPSAttribute(SPSBase):
     class Meta:
         verbose_name = _("Attribute")
         verbose_name_plural = _("Attributes")
+
+    panels_value = [
+        InlinePanel("attribute_value", label=_("Value"), classname="collapsed"),
+    ]
+    panels_main = [
+        FieldPanel("name"),
+        FieldPanel("description"),
+    ]
+    panels_presence = [
+        InlinePanel("presence", label=_("Presence"), classname="collapsed"),
+    ]
+    panels_example = [
+        InlinePanel("example", label=_("Example"), classname="collapsed"),
+    ]
+    panels_note_block = [
+        InlinePanel("note_block", label=_("Note block"), classname="collapsed"),
+    ]
+    panels_version = [
+        AutocompletePanel("sps_versions"),
+    ]
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(panels_main, heading=_("Main")),
+            ObjectList(panels_value, heading=_("Values")),
+            ObjectList(panels_version, heading=_("SPS Versions")),
+            ObjectList(panels_presence, heading=_("Presence")),
+            ObjectList(panels_example, heading=_("Examples")),
+            ObjectList(panels_note_block, heading=_("Note blocks")),
+        ]
+    )
+    base_form_class = CoreAdminModelForm
+
+
+class AttributeValue(Orderable, ClusterableModel, CommonControlField):
+    parent = ParentalKey(
+        'SPSAttribute', on_delete=models.CASCADE, related_name="attribute_value"
+    )
+    value = models.CharField(_("Value"), max_length=256, null=False, blank=False)
+    description = RichTextField(_("Description"), null=True, blank=True)
+    # first occurrence
+    # sps_versions = models.ManyToManyField(
+    #     SPSVersion,
+    #     blank=True,
+    # )
+
+    def __unicode__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+    class Meta:
+        verbose_name = _("Attribute value")
+        verbose_name_plural = _("Attribute values")
+
+    panels = [
+        FieldPanel("value"),
+        FieldPanel("description"),
+        # AutocompletePanel("sps_versions"),
+    ]
+
+    base_form_class = CoreAdminModelForm
