@@ -92,7 +92,7 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
-    "django_celery_results",
+    # "django_celery_results",
 ]
 
 THIRD_PARTY_APPS = [
