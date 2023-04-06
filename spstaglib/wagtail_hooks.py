@@ -11,8 +11,8 @@ from wagtail.contrib.modeladmin.views import CreateView, EditView
 from spstaglib.models import (
     SPSVersion,
     OccurrenceNumber,
-    Example,
     SPSElement,
+    SPSAttribute,
 )
 
 
@@ -33,7 +33,7 @@ class SPSVersionAdmin(ModelAdmin):
     ordering = ("version",)
     create_view_class = SPSVersionCreateView
     edit_view_class = SPSVersionEditView
-    menu_label = _("SPS Version")
+    menu_label = _("SPS Versions")
     menu_icon = "folder"
     menu_order = 100
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
@@ -71,7 +71,7 @@ class OccNumAdmin(ModelAdmin):
     ordering = ("text",)
     create_view_class = OccNumCreateView
     edit_view_class = OccNumEditView
-    menu_label = _("Occurrence Number")
+    menu_label = _("Occurrence Numbers")
     menu_icon = "folder"
     menu_order = 100
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
@@ -116,6 +116,34 @@ class SPSElementAdmin(ModelAdmin):
     )
 
 
+class SPSAttributeCreateView(CreateView):
+    def form_valid(self, form):
+        self.object = form.save_all(self.request.user)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class SPSAttributeEditView(EditView):
+    def form_valid(self, form):
+        self.object = form.save_all(self.request.user)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class SPSAttributeAdmin(ModelAdmin):
+    model = SPSAttribute
+    ordering = ("name", )
+    create_view_class = SPSAttributeCreateView
+    edit_view_class = SPSAttributeEditView
+    menu_label = _("Attributes")
+    menu_icon = "folder"
+    menu_order = 100
+    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = ("name", )
+    search_fields = ("name", )
+
+
 class SPSAdminGroup(ModelAdminGroup):
     menu_label = _("SPS")
     menu_icon = "folder-open-inverse"
@@ -124,6 +152,7 @@ class SPSAdminGroup(ModelAdminGroup):
         SPSVersionAdmin,
         OccNumAdmin,
         SPSElementAdmin,
+        SPSAttributeAdmin,
     )
 
 

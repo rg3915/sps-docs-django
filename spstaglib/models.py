@@ -231,3 +231,19 @@ class SPSElement(SPSBase):
     class Meta:
         verbose_name = _("Element")
         verbose_name_plural = _("Elements")
+
+
+class SPSAttribute(SPSBase):
+    """
+    (*) Nome do atributo
+    (*+) Aparece em
+    (*+) Descrição do atributo
+    (!+) values
+    (!+) Título do exemplo
+    (!+) Descrição textual do exemplo
+    (!+) Exemplo XML
+    (!+) Nota
+    """
+    class Meta:
+        verbose_name = _("Attribute")
+        verbose_name_plural = _("Attributes")
