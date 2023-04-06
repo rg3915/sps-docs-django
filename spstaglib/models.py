@@ -93,7 +93,11 @@ class OccurrenceNumber(models.Model):
 class Presence(Orderable, CommonControlField):
     parent = ParentalKey("SPSBase", on_delete=models.CASCADE, related_name="presence")
     present_in = models.ForeignKey(
-        "SPSBase", on_delete=models.SET_NULL, null=True, blank=True, related_name="present_in",
+        "SPSBase",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="present_in",
     )
     occurrence_number = models.ForeignKey(
         OccurrenceNumber, on_delete=models.SET_NULL, null=True, blank=True
@@ -244,6 +248,7 @@ class SPSAttribute(SPSBase):
     (!+) Exemplo XML
     (!+) Nota
     """
+
     class Meta:
         verbose_name = _("Attribute")
         verbose_name_plural = _("Attributes")

@@ -130,7 +130,7 @@ class SPSAttributeEditView(EditView):
 
 class SPSAttributeAdmin(ModelAdmin):
     model = SPSAttribute
-    ordering = ("name", )
+    ordering = ("name",)
     create_view_class = SPSAttributeCreateView
     edit_view_class = SPSAttributeEditView
     menu_label = _("Attributes")
@@ -140,8 +140,8 @@ class SPSAttributeAdmin(ModelAdmin):
     exclude_from_explorer = (
         False  # or True to exclude pages of this type from Wagtail's explorer view
     )
-    list_display = ("name", )
-    search_fields = ("name", )
+    list_display = ("name",)
+    search_fields = ("name",)
 
 
 class SPSAdminGroup(ModelAdminGroup):
