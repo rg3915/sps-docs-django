@@ -230,11 +230,41 @@ class SPSElement(SPSBase):
     (!+) Nota
     """
 
-    # attributes = models.ManyToManyField(Attribute, related_name='attributes')
+    attributes = models.ManyToManyField('SPSAttribute')
 
     class Meta:
         verbose_name = _("Element")
         verbose_name_plural = _("Elements")
+
+    panels_attribute = [
+        AutocompletePanel("attributes"),
+    ]
+    panels_main = [
+        FieldPanel("name"),
+        FieldPanel("description"),
+    ]
+    panels_presence = [
+        InlinePanel("presence", label=_("Presence"), classname="collapsed"),
+    ]
+    panels_example = [
+        InlinePanel("example", label=_("Example"), classname="collapsed"),
+    ]
+    panels_note_block = [
+        InlinePanel("note_block", label=_("Note block"), classname="collapsed"),
+    ]
+    panels_version = [
+        AutocompletePanel("sps_versions"),
+    ]
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(panels_main, heading=_("Main")),
+            ObjectList(panels_attribute, heading=_("Attributes")),
+            ObjectList(panels_version, heading=_("SPS Versions")),
+            ObjectList(panels_presence, heading=_("Presence")),
+            ObjectList(panels_example, heading=_("Examples")),
+            ObjectList(panels_note_block, heading=_("Note blocks")),
+        ]
+    )
 
 
 class SPSAttribute(SPSBase):
@@ -248,6 +278,11 @@ class SPSAttribute(SPSBase):
     (!+) Exemplo XML
     (!+) Nota
     """
+
+    def autocomplete_label(self):
+        return str(self)
+
+    autocomplete_search_field = "name"
 
     class Meta:
         verbose_name = _("Attribute")
