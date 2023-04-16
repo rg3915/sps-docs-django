@@ -92,7 +92,7 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
-    "django_celery_results",
+    # "django_celery_results",
 ]
 
 THIRD_PARTY_APPS = [
@@ -113,6 +113,7 @@ LOCAL_APPS = [
     # Your stuff: custom apps go here
     "core",
     "wagtailautocomplete",
+    "spstaglib",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
