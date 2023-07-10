@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django_extensions',
     # my apps
     'backend.core',
+    'backend.spstaglib',
 ]
 
 MIDDLEWARE = [
