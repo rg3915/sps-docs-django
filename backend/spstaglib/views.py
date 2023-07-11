@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.views.generic import CreateView
 
-# Create your views here.
+from .models import SPSElement
+from .forms import SPSElementForm
+
+
+class SPSElementCreateView(CreateView):
+    model = SPSElement
+    form_class = SPSElementForm
