@@ -2,9 +2,9 @@ from django.db import models
 
 
 class SPSElement(models.Model):
-    name = models.CharField(max_length=100, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    title = models.CharField(max_length=100, null=True, blank=True)
+    name = models.CharField('Nome', max_length=100, null=True, blank=True)
+    description = models.TextField('Descrição', null=True, blank=True)
+    title = models.CharField('Título', max_length=100, null=True, blank=True)
 
     class Meta:
         ordering = ('name',)
